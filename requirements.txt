@@ -1,5 +1,6 @@
 ultralytics==8.0.26
 paddleocr>=2.0.1
+python-dotenv
 boto3
 spacy
 fastapi
