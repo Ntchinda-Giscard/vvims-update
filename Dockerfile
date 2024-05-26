@@ -16,6 +16,13 @@ RUN python -m pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
 RUN pip install --no-cache-dir -r requirements.txt
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
+RUN mkdir /.paddleocr && chmod -R 777 /.paddleocr
+RUN groupadd -r appgroup && useradd -r -g appgroup -d /app -s /sbin/nologin appuser
+RUN chown -R appuser:appgroup /app /.paddleocr
+
+
+USER appuser
+
 
 # Make port 80 available to the world outside this container
 EXPOSE 7860
