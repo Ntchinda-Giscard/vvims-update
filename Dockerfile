@@ -8,6 +8,9 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends --no-install-suggests \
+  && pip3 install --no-cache-dir --upgrade pip
 RUN python -m pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
 RUN pip install --no-cache-dir -r requirements.txt
 
