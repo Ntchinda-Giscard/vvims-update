@@ -14,6 +14,8 @@ RUN apt-get update \
 RUN apt-get install libgomp1
 RUN python -m pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
 RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+
 
 # Make port 80 available to the world outside this container
 EXPOSE 7860
