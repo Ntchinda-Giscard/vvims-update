@@ -1,0 +1,6 @@
+ultralytics==8.0.26
+paddleocr
+boto3
+spacy
+fastapi
+uvicorn
