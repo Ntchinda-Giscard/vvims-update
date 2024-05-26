@@ -9,7 +9,6 @@ COPY . /app
 
 # Install any needed packages specified in requirements.txt
 RUN python -m pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
-RUN apt-get install libgomp1
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Make port 80 available to the world outside this container
