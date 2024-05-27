@@ -154,9 +154,15 @@ def vehicle_dect(img: str) -> any:
                 colors = {"color": dominant_color, "plate": num_plate}
                 print(colors)
                 print(classes)
+            
+            # {'color': (70, 69, 74), 'plate': ['LT661HM CMR ']}
+            # ['car', 'car']
+            # {'color': (73, 82, 89), 'plate': []}
+            # ['car', 'car']
 
         for i in range(len(classes)):
             final.append({ "type": classes[i], "car_data" : colors[i]})
+        print("[*]---- Final detecttion :", final)
         return final
     
     except Exception as e:
