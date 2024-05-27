@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 # RUN mkdir /.paddleocr /app/uploads /app/license && chmod -R 777 /.paddleocr /app/uploads /app/license
 # Create the necessary directories and set permissions
 # Create the directories and set permissions
-RUN mkdir /.paddleocr /code/uploads /code/license && chmod -R 777 /.paddleocr /app/uploads /app/license
+RUN mkdir /.paddleocr /app/uploads /app/license && chmod -R 777 /.paddleocr /app/uploads /app/license
 
 # Create a non-root user and group
 RUN groupadd -r appgroup && useradd -r -g appgroup -d /code -s /sbin/nologin appuser
