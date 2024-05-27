@@ -6,3 +6,4 @@ spacy
 fastapi
 uvicorn
 colorthief
+omegaconf
