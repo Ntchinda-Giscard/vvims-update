@@ -22,11 +22,11 @@ logging.basicConfig(
     ]
 )
 
-# Create a logger
-logger = logging.getLogger(__name__)
 
 # Create a logger
 logger = logging.getLogger(__name__)
+
+
 load_dotenv()
 
 ocr_model = PaddleOCR(lang='en')
@@ -169,8 +169,9 @@ def vehicle_dect(img: str) -> any:
                 color_thief = ColorThief(img_path)
                 dominant_color = color_thief.get_color(quality=1)
                 colors = {"color": dominant_color, "plate": num_plate}
-                print(colors)
-                print(classes)
+                logger.info("[*]---- Color detecttion : f{color}")
+
+                logger.info("[*]---- Classes detecttion : f{classes}")
             
             # {'color': (70, 69, 74), 'plate': ['LT661HM CMR ']}
             # ['car', 'car']
@@ -179,7 +180,7 @@ def vehicle_dect(img: str) -> any:
 
         for i in range(len(classes)):
             final.append({ "type": classes[i], "car_data" : colors[i]})
-        print("[*]---- Final detecttion :", final)
+        logger.info("[*]---- Final detecttion : f{final}")
         return final
     
     except Exception as e:
