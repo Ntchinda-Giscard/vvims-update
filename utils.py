@@ -111,6 +111,25 @@ def read_text_img(img_path:str) -> str:
         for res in result[0]:
             text += res[1][0] + ' '
     return text
+def detect_licensePlate(img: str) -> dict:
+    image = Image.open(img)
+    results = vehicle(source=img, cls=['car', 'bus', 'truck', 'motorcycle'], conf=0.7)
+
+    return results
+
+    # if len(results > 1):
+    #     for result in results:
+    #         boxes = result.boxes.xyxy
+    #         for box in boxes.numpy():
+    #             x1, y1, x2, y2 = box[0], box[1], box[2], box[3]
+    #             cropped_image = image.crop((x1, y1, x2, y2))
+    #             color = 
+
+
+
+
+    return results
+
 
 def licence_dect(img: str) -> list:
     image = Image.open(img)
@@ -152,7 +171,7 @@ def vehicle_dect(img: str) -> any:
     try:
         for result in results:
             boxes = result.boxes.xyxy
-            print("Classes",result.boxes.cls)
+            logger.info(f"Classes {result.boxes.cls}")
             for c in result.boxes.cls.numpy():
                 classes.append(names[int(c)])
             for box in boxes.numpy():
