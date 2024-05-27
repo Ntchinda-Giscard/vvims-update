@@ -19,24 +19,18 @@ RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 # Create the directory where PaddleOCR wants to write
 # RUN mkdir /.paddleocr /app/uploads /app/license && chmod -R 777 /.paddleocr /app/uploads /app/license
-RUN mkdir -p /.paddleocr /uploads /license && chmod -R 777 /.paddleocr /uploads /license
-
-
-# RUN mkdir -p /app/.paddleocr /app/uploads /app/license && chmod -R 777 /app/.paddleocr /app/uploads /app/license
-
+# Create the necessary directories and set permissions
+RUN mkdir -p /.paddleocr /app/uploads /app/license && chmod -R 777 /.paddleocr /app/uploads /app/license
 
 # Create a non-root user and group
 RUN groupadd -r appgroup && useradd -r -g appgroup -d /app -s /sbin/nologin appuser
 
-
-# Change ownership of the application directory and /.paddleocr
-# RUN chown -R appuser:appgroup /app /.paddleocr
-
-RUN chown -R appuser:appgroup /app 
-
+# Change ownership of the application directory and the newly created directories
+RUN chown -R appuser:appgroup /app
 
 # Switch to the new user
 USER appuser
+
 
 
 # Make port 80 available to the world outside this container
