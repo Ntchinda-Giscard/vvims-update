@@ -216,9 +216,9 @@ async def carplate(license: UploadFile = File(...)):
             license_file.write(await license.read())
         result =  vehicle_dect(license_path)
 
-        if len(result) <=0:
-            result = licence_dect(license_path)
-            result = { "type": '', "car_data" : [{"color": '', "plate" : result}]}
+        # if:
+        #     result = licence_dect(license_path)
+        #     result = { "type": '', "car_data" : [{"color": '', "plate" : result}]}
 
         return{"message" : "Upload successful", "status_code" : 200, "data" : result}
     except Exception as e:
