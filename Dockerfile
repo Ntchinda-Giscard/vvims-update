@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install https://huggingface.co/Ntchinda-Giscard/en_pipeline/resolve/main/en_pipeline-any-py3-none-any.whl
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
-RUN mkdir /app/.paddleocr /app/uploads && chmod -R 777 /app/.paddleocr /app/uploads /app/license
+RUN mkdir /app/.paddleocr /app/uploads /app/license && chmod -R 777 /app/.paddleocr /app/uploads /app/license
 RUN groupadd -r appgroup && useradd -r -g appgroup -d /app -s /sbin/nologin appuser
 RUN chown -R appuser:appgroup /app /app/.paddleocr /app/uploads /app/license
 
