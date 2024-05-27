@@ -108,20 +108,24 @@ def licence_dect(img: str) -> list:
 
 
     detections = []
-    for result in results:
-        boxes = result.boxes.xyxy
-        for box in boxes.numpy():
-            x1, y1, x2, y2 = box[0], box[1], box[2], box[3]
-        # confidence = float(confidence)
-            cropped_image = image.crop((x1, y1, x2, y2))
+    try:
+        for result in results:
+            boxes = result.boxes.xyxy
+            for box in boxes.numpy():
+                x1, y1, x2, y2 = box[0], box[1], box[2], box[3]
+            # confidence = float(confidence)
+                cropped_image = image.crop((x1, y1, x2, y2))
 
-            cropped_image.save(os.path.join('license', 'carplate.jpg'))
+                cropped_image.save(os.path.join('license', 'carplate.jpg'))
 
-            txt = read_text_img('license/carplate.jpg')
+                txt = read_text_img('license/carplate.jpg')
 
-            detections.append({"matricule":txt, "color" :dominant_color})
-    
-    return detections
+                detections.append(txt)
+        
+        return detections
+    except Exception as e:
+        pass
+
 
 
 def vehicle_dect(img: str) -> any:
