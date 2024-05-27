@@ -16,8 +16,8 @@ app.add_middleware(
 
 # Directory to save the uploaded images
 # Create the upload directory if it doesn't exist
-os.makedirs('/uploads', exist_ok=True)
-os.makedirs('/license', exist_ok=True)
+os.makedirs('uploads', exist_ok=True)
+os.makedirs('license', exist_ok=True)
 
 @app.get("/", response_class=HTMLResponse)
 async def read_items():
