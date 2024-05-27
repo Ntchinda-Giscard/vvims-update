@@ -13,7 +13,7 @@ from colorthief import ColorThief
 load_dotenv()
 
 ocr_model = PaddleOCR(lang='en')
-nlp_ner = spacy.load("output/model-best")
+nlp_ner = spacy.load("en_pipeline")
 detector = YOLO('best.pt')
 vehicle = YOLO('yolov8x.pt')
 
