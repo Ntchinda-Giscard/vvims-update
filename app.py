@@ -214,6 +214,7 @@ async def carplate(license: UploadFile = File(...)):
         license_path = os.path.join("uploads", 'car.jpg')
         with open(license_path, "wb") as license_file:
             license_file.write(await license.read())
+        print("This is the license path :", license_path)
         result =  vehicle_dect(license_path)
 
         # if:
