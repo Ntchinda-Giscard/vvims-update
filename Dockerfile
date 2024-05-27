@@ -5,7 +5,7 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-COPY ./requirements.txt /app/requirements.txt
+COPY . /app
 
 # Install any needed packages specified in requirements.txt
 RUN apt-get update \
@@ -20,25 +20,22 @@ RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 # Create the directory where PaddleOCR wants to write
 # RUN mkdir /.paddleocr /app/uploads /app/license && chmod -R 777 /.paddleocr /app/uploads /app/license
 # Create the necessary directories and set permissions
-# Create the directories and set permissions
-RUN mkdir /.paddleocr /app/uploads /app/license && chmod -R 777 /.paddleocr /app/uploads /app/license
+RUN mkdir -p /.paddleocr /app/uploads /app/license && chmod -R 777 /.paddleocr /app/uploads /app/license
 
 # Create a non-root user and group
-RUN groupadd -r appgroup && useradd -r -g appgroup -d /code -s /sbin/nologin appuser
+RUN groupadd -r appgroup && useradd -r -g appgroup -d /app -s /sbin/nologin appuser
 
-# Change ownership of the /code directory and the newly created directories
-RUN chown -R appuser:appgroup /app /.paddleocr /app/uploads /app/license
-
-COPY . .
-
+# Change ownership of the application directory and the newly created directories
+RUN chown -R appuser:appgroup /app
 
 # Switch to the new user
-# USER appuser
+USER appuser
 
+COPY . .
 
 
 # Make port 80 available to the world outside this container
 EXPOSE 7860
 
 # Run the FastAPI app with uvicorn
-CMD ["python", "app.py"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
