@@ -175,12 +175,12 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
             raise HTTPException(status_code=400, detail="Both front and back images are required.")
 
         # Save the front image to disk
-        front_path = os.path.join(UPLOAD_DIR, 'front.jpg')
+        front_path = os.path.join("uploads", 'front.jpg')
         with open(front_path, "wb") as front_file:
             front_file.write(await front.read())
 
         # Save the back image to disk
-        back_path = os.path.join(UPLOAD_DIR, 'back.jpg')
+        back_path = os.path.join("uploads", 'back.jpg')
         with open(back_path, "wb") as back_file:
             back_file.write(await back.read())
 
@@ -211,7 +211,7 @@ async def carplate(license: UploadFile = File(...)):
         if not license:
             raise HTTPException(status_code=400, detail="License plate image is required.")
          # Save the back image to disk
-        license_path = os.path.join(UPLOAD_DIR, 'car.jpg')
+        license_path = os.path.join(uploads, 'car.jpg')
         with open(license_path, "wb") as license_file:
             license_file.write(await license.read())
         result =  vehicle_dect(license_path)
