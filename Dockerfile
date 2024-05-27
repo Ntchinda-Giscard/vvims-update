@@ -17,14 +17,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install https://huggingface.co/Ntchinda-Giscard/en_pipeline/resolve/main/en_pipeline-any-py3-none-any.whl
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
-# Create the directories and set permissions
-RUN mkdir -p /app/.paddleocr /app/uploads /app/license && chmod -R 777 /app/.paddleocr /app/uploads /app/license
+# Create the directory where PaddleOCR wants to write
+RUN mkdir /.paddleocr && chmod -R 777 /.paddleocr
 
 # Create a non-root user and group
 RUN groupadd -r appgroup && useradd -r -g appgroup -d /app -s /sbin/nologin appuser
 
-# Change ownership of the application directory and the newly created directories
-RUN chown -R appuser:appgroup /app
+# Change ownership of the application directory and /.paddleocr
+RUN chown -R appuser:appgroup /app /.paddleocr
 
 # Switch to the new user
 USER appuser
