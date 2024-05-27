@@ -33,7 +33,7 @@ COPY . .
 
 
 # Switch to the new user
-USER appuser
+# USER appuser
 
 
 
