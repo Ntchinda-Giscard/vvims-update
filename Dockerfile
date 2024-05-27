@@ -14,11 +14,12 @@ RUN apt-get update \
 RUN apt-get install libgomp1
 RUN python -m pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install https://huggingface.co/Ntchinda-Giscard/en_pipeline/resolve/main/en_pipeline-any-py3-none-any.whl
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
-RUN mkdir /.paddleocr && chmod -R 777 /.paddleocr
+RUN mkdir /app/.paddleocr /app/uploads && chmod -R 777 /app/.paddleocr /app/uploads /app/license
 RUN groupadd -r appgroup && useradd -r -g appgroup -d /app -s /sbin/nologin appuser
-RUN chown -R appuser:appgroup /app /.paddleocr
+RUN chown -R appuser:appgroup /app /app/.paddleocr /app/uploads /app/license
 
 
 USER appuser
