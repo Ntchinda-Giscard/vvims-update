@@ -211,7 +211,7 @@ async def carplate(license: UploadFile = File(...)):
         if not license:
             raise HTTPException(status_code=400, detail="License plate image is required.")
          # Save the back image to disk
-        license_path = os.path.join(uploads, 'car.jpg')
+        license_path = os.path.join("uploads", 'car.jpg')
         with open(license_path, "wb") as license_file:
             license_file.write(await license.read())
         result =  vehicle_dect(license_path)
