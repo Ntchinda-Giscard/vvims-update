@@ -15,10 +15,10 @@ load_dotenv()
 ocr_model = PaddleOCR(lang='en')
 nlp_ner = spacy.load("en_pipeline")
 detector = YOLO('best.pt')
-vehicle = YOLO('yolov8x.pt')
+vehicle = YOLO('yolov8m.pt')
 
-aws_access_key_id=os.getenv('AWS_ACESS_KEY')
-aws_secret_access_key = os.getenv('AWS_SECRET_KEY')
+# aws_access_key_id=os.getenv('AWS_ACESS_KEY')
+# aws_secret_access_key = os.getenv('AWS_SECRET_KEY')
 bucket_name='vvims'
 
 # Function to upload a file to S3
