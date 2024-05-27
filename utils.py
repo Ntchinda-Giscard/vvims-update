@@ -132,25 +132,32 @@ def vehicle_dect(img: str) -> any:
     classes=[]
     colors = []
     final = []
-    for result in results:
-        boxes = result.boxes.xyxy
-        print("Classes",result.boxes.cls)
-        for c in result.boxes.cls.numpy():
-            classes.append(names[int(c)])
-        for box in boxes.numpy():
-            x1, y1, x2, y2 = box[0], box[1], box[2], box[3]
-            cropped_image = image.crop((x1, y1, x2, y2))
-            img_path = os.path.join('license', 'cars.jpg')
-            cropped_image.save(img_path)
+    try:
+        for result in results:
+            boxes = result.boxes.xyxy
+            print("Classes",result.boxes.cls)
+            for c in result.boxes.cls.numpy():
+                classes.append(names[int(c)])
+            for box in boxes.numpy():
+                x1, y1, x2, y2 = box[0], box[1], box[2], box[3]
+                cropped_image = image.crop((x1, y1, x2, y2))
+                img_path = os.path.join('license', 'cars.jpg')
+                cropped_image.save(img_path)
 
-            num_plate = licence_dect(img_path)
-            color_thief = ColorThief(img_path)
-            dominant_color = color_thief.get_color(quality=1)
-            colors.append((dominant_color, num_plate))
-    for i in range(len(classes)):
-        final.append({ "type": classes[i], "color" : colors[i]})
+                num_plate = licence_dect(img_path)
+                color_thief = ColorThief(img_path)
+                dominant_color = color_thief.get_color(quality=1)
+                colors = {"color": dominant_color, "plate": num_plate}
+                print(colors)
+                print(classes)
 
-    return final
+        for i in range(len(classes)):
+            final.append({ "type": classes[i], "car_data" : colors[i]})
+        return final
+    
+    except Exception as e:
+        # raise(e)
+        pass
 
 
 
