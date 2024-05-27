@@ -8,8 +8,25 @@ import time
 from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
 from colorthief import ColorThief
+import logging
 
+import logging
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,  # Set the logging level
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Log message format
+    handlers=[
+        logging.FileHandler("app.log"),  # Log to a file
+        logging.StreamHandler()  # Log to console
+    ]
+)
+
+# Create a logger
+logger = logging.getLogger(__name__)
+
+# Create a logger
+logger = logging.getLogger(__name__)
 load_dotenv()
 
 ocr_model = PaddleOCR(lang='en')
