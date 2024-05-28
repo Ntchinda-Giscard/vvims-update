@@ -139,17 +139,17 @@ def detect_licensePlate(img: str) -> dict:
                 dominant_color = color_thief.get_color(quality=1)
                 data.append({"plate": num_plate, "color": dominant_color})
         for i in range(len(classes)):
-            final.append({"data": {"type": classes[i], "info": data[i]}})
+            final.append({"type": classes[i], "info": data[i]})
     else:
         plate = licence_dect(img)
         color_thief = ColorThief(img)
         dominant_color = color_thief.get_color(quality=1)
         final = [
-            {"data": {"type": "", "info": {"plate": plate, "color": dominant_color }}}
+            {"type": "", "info": {"plate": plate, "color": dominant_color }}
         ]
     print(final)
 
-    return results
+    return final
 
     # if len(results > 1):
     #     for result in results:
