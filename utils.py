@@ -147,6 +147,7 @@ def detect_licensePlate(img: str) -> dict:
         final = [
             {"data": {"type": "", "info": {"plate": plate, "color": dominant_color }}}
         ]
+    print(final)
 
     return results
 
