@@ -121,7 +121,7 @@ def detect_licensePlate(img: str) -> dict:
 
     print("Results from car detetctions,:", results)
 
-    if len(results) >= 1:
+    if len(results[0]) >= 1:
         
         for result in results:
             for c in result.boxes.cls.numpy():
