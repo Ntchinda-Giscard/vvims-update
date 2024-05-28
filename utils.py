@@ -114,6 +114,7 @@ def read_text_img(img_path:str) -> str:
 def detect_licensePlate(img: str) -> dict:
     image = Image.open(img)
     results = vehicle(source=img, cls=['car', 'bus', 'truck', 'motorcycle'], conf=0.5)
+    print("Results from car detetctions,:", results)
 
     return results
 
