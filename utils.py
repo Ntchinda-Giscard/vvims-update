@@ -28,7 +28,7 @@ load_dotenv()
 ocr_model = PaddleOCR(lang='en')
 nlp_ner = spacy.load("en_pipeline")
 detector = YOLO('best.pt')
-vehicle = YOLO('yolov8m.pt')
+vehicle = YOLO('yolov8x.pt')
 
 # aws_access_key_id=os.getenv('AWS_ACESS_KEY')
 # aws_secret_access_key = os.getenv('AWS_SECRET_KEY')
@@ -113,8 +113,9 @@ def read_text_img(img_path:str) -> str:
     return text
 def detect_licensePlate(img: str) -> dict:
     image = Image.open(img)
-    results = vehicle(source=img, cls=['car', 'bus', 'truck', 'motorcycle'], conf=0.5)
+    results = vehicle(source=img, cls=['car', 'bus', 'truck', 'motorcycle'], conf=0.7)
     print("Results from car detetctions,:", results)
+    print("\033[92mNumber of results detected\033[0m:"  len(results))
 
     return results
 
