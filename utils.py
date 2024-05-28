@@ -114,8 +114,39 @@ def read_text_img(img_path:str) -> str:
 def detect_licensePlate(img: str) -> dict:
     image = Image.open(img)
     results = vehicle(source=img, cls=['car', 'bus', 'truck', 'motorcycle'], conf=0.7)
-    print("Results from car detetctions,:", results)
-    print("\033[92mNumber of results detected\033[0m:",  len(results.numpy))
+    names = vehicle.names
+    classes=[]
+    data=[]
+    final = []
+
+    print("Results from car detetctions,:", len(results))
+
+    if len(results) > 1:
+        
+        for result in results:
+            for c in result.boxes.cls.numpy():
+                classes.append(names[int(c)])
+            boxes = result.boxes.xyxy
+            for box in boxes.numpy():
+                x1, y1, x2, y2 = box[0], box[1], box[2], box[3]
+                cropped_image = image.crop((x1, y1, x2, y2))
+
+                img_path = os.path.join('license', 'cars.jpg')
+                cropped_image.save(img_path)
+                num_plate = licence_dect(img_path)
+
+                color_thief = ColorThief(img_path)
+                dominant_color = color_thief.get_color(quality=1)
+                data.append({"plate": num_plate, "color": dominant_color})
+        for i in range(len(classes)):
+            final.append({"data": {"type": classes[i], "info": data[i]}})
+    else:
+        plate = licence_dect(img)
+        color_thief = ColorThief(img)
+        dominant_color = color_thief.get_color(quality=1)
+        final = [
+            {"data": {"type": "", "info": {"plate": plate, "color": dominant_color }}}
+        ]
 
     return results
 
@@ -156,7 +187,7 @@ def licence_dect(img: str) -> list:
 
                 detections.append(txt)
         
-        return detections
+        return txt
     except Exception as e:
         pass
 
