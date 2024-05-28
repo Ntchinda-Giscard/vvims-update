@@ -115,7 +115,7 @@ def detect_licensePlate(img: str) -> dict:
     image = Image.open(img)
     results = vehicle(source=img, cls=['car', 'bus', 'truck', 'motorcycle'], conf=0.7)
     print("Results from car detetctions,:", results)
-    print("\033[92mNumber of results detected\033[0m:"  len(results))
+    print("\033[92mNumber of results detected\033[0m:",  len(results))
 
     return results
 
