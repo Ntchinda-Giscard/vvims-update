@@ -13,7 +13,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
 # Directory to save the uploaded images
 # Create the upload directory if it doesn't exist
 os.makedirs('uploads', exist_ok=True)
