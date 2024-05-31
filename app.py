@@ -212,7 +212,7 @@ async def carplate(license: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail="License plate image is required.")
          # Save the back image to disk
         license_path = os.path.join("uploads", 'car.jpg')
-        car_url = upload_to_s3(back_img_path)
+        car_url = upload_to_s3(img_path)
         with open(license_path, "wb") as license_file:
             license_file.write(await license.read())
         print("This is the license path :", license_path)
@@ -222,7 +222,7 @@ async def carplate(license: UploadFile = File(...)):
                             status_code = 200
                            )
     except Exception as e:
-        return {"message": f"Internal server error: {str(e)}", "status_code": 500}
+        return HTTPException(status_code=400, detail=f"Internal server error {str(e)}")
 
 
 
