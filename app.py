@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 import os
 from fastapi.middleware.cors import CORSMiddleware
 from utils import detect_licensePlate, licence_dect, ner_recog, read_text_img, upload_to_s3, vehicle_dect
@@ -188,8 +188,8 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
         back_img_path = "uploads/back.jpg"
         front_url=''
         back_url=''
-        # front_url = upload_to_s3(front_img_path)
-        # back_url = upload_to_s3(back_img_path)
+        front_url = upload_to_s3(front_img_path)
+        back_url = upload_to_s3(back_img_path)
 
         front_text = read_text_img(front_img_path)
         back_text = read_text_img(back_img_path)
@@ -212,12 +212,15 @@ async def carplate(license: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail="License plate image is required.")
          # Save the back image to disk
         license_path = os.path.join("uploads", 'car.jpg')
+        car_url = upload_to_s3(back_img_path)
         with open(license_path, "wb") as license_file:
             license_file.write(await license.read())
         print("This is the license path :", license_path)
         result = detect_licensePlate(license_path)
 
-        return{"message" : "Upload successful", "status_code" : 200, "data" : result}
+        return JSONResponse( content = {"message" : "Upload successful", "data" : result, "car_url": car_url}
+                            status_code = 200
+                           )
     except Exception as e:
         return {"message": f"Internal server error: {str(e)}", "status_code": 500}
 
