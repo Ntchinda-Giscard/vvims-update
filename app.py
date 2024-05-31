@@ -218,7 +218,7 @@ async def carplate(license: UploadFile = File(...)):
         print("This is the license path :", license_path)
         result = detect_licensePlate(license_path)
 
-        return JSONResponse( content = {"message" : "Upload successful", "data" : result, "car_url": car_url}
+        return JSONResponse( content = {"message" : "Upload successful", "data" : result, "car_url": car_url},
                             status_code = 200
                            )
     except Exception as e:
