@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 import os
 from fastapi.middleware.cors import CORSMiddleware
-from utils import detect_licensePlate, licence_dect, ner_recog, read_text_img, upload_to_s3, vehicle_dect
+from utils import detect_licensePlate, licence_dect, ner_recog, read_text_img, upload_to_s3, vehicle_dect, write_to_upload
 
 app = FastAPI()
 
@@ -172,25 +172,27 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
         # Check if either front or back image is missing
         if not front or not back:
             raise HTTPException(status_code=400, detail="Both front and back images are required.")
+        
+        front_img_path = write_to_upload(front, file_path = "front.jpg")
+        back_img_path = write_to_upload(back)
+        face_img_path = write_to_upload(face)
+
 
         # Save the front image to disk
-        front_path = os.path.join("uploads", 'front.jpg')
-        with open(front_path, "wb") as front_file:
-            front_file.write(await front.read())
+        # front_path = os.path.join("uploads", 'front.jpg')
+        # with open(front_path, "wb") as front_file:
+        #     front_file.write(await front.read())
 
-        # Save the back image to disk
-        back_path = os.path.join("uploads", 'back.jpg')
-        with open(back_path, "wb") as back_file:
-            back_file.write(await back.read())
+        # # Save the back image to disk
+        # back_path = os.path.join("uploads", 'back.jpg')
+        # with open(back_path, "wb") as back_file:
+        #     back_file.write(await back.read())
         
-        # Save the face image to disk
-        face_path = os.path.join("uploads", 'face.jpg')
-        with open(face_path, "wb") as face_file:
-            face_file.write(await back.read())
+        # # Save the face image to disk
+        # face_path = os.path.join("uploads", 'face.jpg')
+        # with open(face_path, "wb") as face_file:
+        #     face_file.write(await back.read())
 
-        front_img_path = front_path
-        back_img_path = back_path
-        face_img_path = face_path
 
         face_url = upload_to_s3(face_img_path)
         front_url = upload_to_s3(front_img_path)
@@ -211,13 +213,13 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
 
 @app.post("/carplate", description="This endpoint expects a file named license and return a list of turple having the detected number plates and the extracted text")
 async def carplate(license: UploadFile = File(...)):
-    img_path = 'uploads/car.jpg'
+
     try:
         if not license:
             raise HTTPException(status_code=400, detail="License plate image is required.")
          # Save the back image to disk
         license_path = os.path.join("uploads", 'car.jpg')
-        car_url = upload_to_s3(img_path)
+        car_url = upload_to_s3(license_path)
         print(f"[*] --- Image URL ----> {car_url}")
         with open(license_path, "wb") as license_file:
             license_file.write(await license.read())

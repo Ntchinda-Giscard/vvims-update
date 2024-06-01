@@ -1,5 +1,6 @@
 import os
 import uuid
+from fastapi import File
 from paddleocr import PaddleOCR
 import spacy
 from ultralytics import YOLO
@@ -55,7 +56,9 @@ def upload_to_s3(
     file_name = file_path.split("/")[-1]
     
     # Concatenate the timestamp with the file name
-    unique_file_name = f"{timestamp}_{str(uuid.uuid4())}_{file_name}"
+    unique_file_name = f"{str(uuid.uuid4())}{file_name}"
+
+    print(f"[*] ---- File path ====> {file_path}")
     
     try:
         # Upload the file
@@ -237,7 +240,11 @@ def vehicle_dect(img: str) -> any:
         # raise(e)
         pass
 
-
+def write_to_upload( file, file_path, folder= "uploads"):
+    path = os.path.join(folder, file_path)
+    with open(path, "wb") as front_file:
+        front_file.write( file.read())
+    return path
 
 # res = licence_dect("cars.jpg")
 # print(res)
