@@ -1,4 +1,5 @@
 import os
+import uuid
 from paddleocr import PaddleOCR
 import spacy
 from ultralytics import YOLO
@@ -54,7 +55,7 @@ def upload_to_s3(
     file_name = file_path.split("/")[-1]
     
     # Concatenate the timestamp with the file name
-    unique_file_name = f"{timestamp}_{file_name}"
+    unique_file_name = f"{timestamp}_{str(uuid.uuid4())}_{file_name}"
     
     try:
         # Upload the file
