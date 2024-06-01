@@ -157,7 +157,7 @@ async def read_items():
     return HTMLResponse(content=html_content, status_code=200)
 
 @app.post("/idextract", description="This endpoint expects two files one named front and the other back which corresponds to the front and back of the id card, and returns a list of with entity_back and entity_front being the extracted infomation from the image")
-async def upload_files(front: UploadFile = File(...), back: UploadFile = File(...)):
+async def upload_files(front: UploadFile = File(...), back: UploadFile = File(...), face: UploadFile= File(...)):
     """
     Endpoint to receive front and back image uploads and save them to disk.
 
@@ -182,11 +182,17 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
         back_path = os.path.join("uploads", 'back.jpg')
         with open(back_path, "wb") as back_file:
             back_file.write(await back.read())
+        
+        # Save the face image to disk
+        face_path = os.path.join("uploads", 'face.jpg')
+        with open(face_path, "wb") as face_file:
+            face_file.write(await back.read())
 
-        front_img_path = "uploads/front.jpg"
-        back_img_path = "uploads/back.jpg"
-        front_url=''
-        back_url=''
+        front_img_path = front_path
+        back_img_path = back_path
+        face_img_path = face_path
+
+        face_url = upload_to_s3(face_img_path)
         front_url = upload_to_s3(front_img_path)
         back_url = upload_to_s3(back_img_path)
 
@@ -212,6 +218,7 @@ async def carplate(license: UploadFile = File(...)):
          # Save the back image to disk
         license_path = os.path.join("uploads", 'car.jpg')
         car_url = upload_to_s3(img_path)
+        print(f"[*] --- Image URL ----> {car_url}")
         with open(license_path, "wb") as license_file:
             license_file.write(await license.read())
         print("This is the license path :", license_path)
