@@ -166,7 +166,11 @@ async def read_items():
     return HTMLResponse(content=html_content, status_code=200)
 
 @app.post("/idextract", description="This endpoint expects two files one named front and the other back which corresponds to the front and back of the id card, and returns a list of with entity_back and entity_front being the extracted infomation from the image")
-async def upload_files(front: UploadFile = File(...), back: UploadFile = File(...), face: UploadFile= File(...)):
+async def upload_files(
+    front: UploadFile = File(...), 
+    back: UploadFile = File(...), 
+    face: UploadFile= File(...)
+    ):
     """
     Endpoint to receive front and back image uploads and save them to disk.
 
@@ -215,7 +219,7 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
 
         print(f"[*] ---- Entity front ----> {ent_front}")
         print(f"[*] ---- Entity back ----> {ent_back}")
-
+        serial_number = ''
         for i in ent_back["entities"]:
             if 'serial' in i:
                 serial_number = i['serial']
@@ -247,7 +251,7 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
 
         return JSONResponse(content = {"message": "Upload successful", "data":{"text_front": f'{front_text}', 'front_url': front_url , 'entity_front': ent_front, 'text_back': f'{back_text}', 'back_url': back_url,  'entity_back': ent_back}}, status_code=200)
     except Exception as e:
-        return {"message": f"Internal server error: {str(e)}", "status_code": 500}
+        return HTTPException(content={"message": f"Internal server error: {str(e)}"}, status_code = 500)
 
 @app.post("/carplate", description="This endpoint expects a file named license and return a list of turple having the detected number plates and the extracted text")
 async def carplate(license: UploadFile = File(...)):
@@ -256,13 +260,16 @@ async def carplate(license: UploadFile = File(...)):
         if not license:
             raise HTTPException(status_code=400, detail="License plate image is required.")
          # Save the back image to disk
-        license_path = os.path.join("uploads", 'car.jpg')
-        car_url = upload_to_s3(license_path)
-        print(f"[*] --- Image URL ----> {car_url}")
-        with open(license_path, "wb") as license_file:
-            license_file.write(await license.read())
-        print("This is the license path :", license_path)
-        result = detect_licensePlate(license_path)
+       
+        car_path = os.path.join("uploads", 'cars.jpg')
+        with open(car_path, "wb") as face_file:
+            face_file.write(await license.read())
+
+        car_url = upload_to_s3(car_path)
+        print(f"[*] --- Image URL --> {car_url}")
+
+        print(" [*] --- This is the license path --> :", car_path)
+        result = detect_licensePlate(car_path)
 
         return JSONResponse( content = {"message" : "Upload successful", "data" : result, "car_url": car_url},
                             status_code = 200
