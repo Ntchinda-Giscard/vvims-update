@@ -3,6 +3,10 @@ from fastapi.responses import HTMLResponse, JSONResponse
 import os
 from fastapi.middleware.cors import CORSMiddleware
 from utils import detect_licensePlate, licence_dect, ner_recog, read_text_img, upload_to_s3, vehicle_dect, write_to_upload
+from pinecone import Pinecone
+
+pc = Pinecone(api_key="dc53a991-1d1a-4f03-b718-1ec0df3b0f00")
+index = pc.Index("faces-id")
 
 app = FastAPI()
 
@@ -13,6 +17,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+
 # Directory to save the uploaded images
 # Create the upload directory if it doesn't exist
 os.makedirs('uploads', exist_ok=True)
@@ -173,33 +179,33 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
         if not front or not back:
             raise HTTPException(status_code=400, detail="Both front and back images are required.")
         
-        front_img_path = write_to_upload(front, file_path = "front.jpg")
-        back_img_path = write_to_upload(back)
-        face_img_path = write_to_upload(face)
+        # front_img_path = write_to_upload(front, file_path = "front.jpg")
+        # back_img_path = write_to_upload(back)
+        # face_img_path = write_to_upload(face)
 
 
         # Save the front image to disk
-        # front_path = os.path.join("uploads", 'front.jpg')
-        # with open(front_path, "wb") as front_file:
-        #     front_file.write(await front.read())
+        front_path = os.path.join("uploads", 'front.jpg')
+        with open(front_path, "wb") as front_file:
+            front_file.write(await front.read())
 
-        # # Save the back image to disk
-        # back_path = os.path.join("uploads", 'back.jpg')
-        # with open(back_path, "wb") as back_file:
-        #     back_file.write(await back.read())
+        # Save the back image to disk
+        back_path = os.path.join("uploads", 'back.jpg')
+        with open(back_path, "wb") as back_file:
+            back_file.write(await back.read())
         
-        # # Save the face image to disk
-        # face_path = os.path.join("uploads", 'face.jpg')
-        # with open(face_path, "wb") as face_file:
-        #     face_file.write(await back.read())
+        # Save the face image to disk
+        face_path = os.path.join("uploads", 'face.jpg')
+        with open(face_path, "wb") as face_file:
+            face_file.write(await back.read())
 
 
-        face_url = upload_to_s3(face_img_path)
-        front_url = upload_to_s3(front_img_path)
-        back_url = upload_to_s3(back_img_path)
+        face_url = upload_to_s3(face_path)
+        front_url = upload_to_s3(front_path)
+        back_url = upload_to_s3(back_path)
 
-        front_text = read_text_img(front_img_path)
-        back_text = read_text_img(back_img_path)
+        front_text = read_text_img(front_path)
+        back_text = read_text_img(back_path)
         
         ent_front = ner_recog(front_text)
         ent_back = ner_recog(back_text)
@@ -210,7 +216,7 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
 
 
 
-        return {"message": "Upload successful", "status_code": 200, "data":{"text_front": f'{front_text}', 'front_url': front_url , 'entity_front': ent_front, 'text_back': f'{back_text}', 'back_url': back_url,  'entity_back': ent_back}}
+        return JSONResponse(content = {"message": "Upload successful", "data":{"text_front": f'{front_text}', 'front_url': front_url , 'entity_front': ent_front, 'text_back': f'{back_text}', 'back_url': back_url,  'entity_back': ent_back}}, status_code=200)
     except Exception as e:
         return {"message": f"Internal server error: {str(e)}", "status_code": 500}
 

@@ -197,6 +197,51 @@ def licence_dect(img: str) -> list:
         pass
 
 
+def lookup_user_metadata(index, encoder, serial):
+    result = index.query(
+        namespace="ns1",
+        vector=[0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3],
+        top_k=2,
+        include_values=True,
+        include_metadata=True,
+        filter={"serial": {"$eq": serial}}
+    )
+    result_data = {
+        "matches": [
+            {
+                "id": match.id,
+                "score": match.score,
+                "metadata": match.metadata
+            }
+            for match in result.matches
+        ]
+    }
+
+    return result_data
+
+
+def lookup_user(index, encoding_list):
+    result = index.query(
+            namespace="ns1",
+            vector=encoding_list,
+            top_k=1,
+            include_metadata=True,
+        )
+    
+
+        # Convert the QueryResponse to a serializable format
+    result_data = {
+        "matches": [
+            {
+                "id": match.id,
+                "score": match.score,
+                "metadata": match.metadata
+            }
+            for match in result.matches
+        ]
+    }
+
+    return result_data
 
 def vehicle_dect(img: str) -> any:
     image = Image.open(img)

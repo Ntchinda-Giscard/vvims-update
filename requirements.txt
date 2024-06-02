@@ -8,3 +8,4 @@ uvicorn
 colorthief
 omegaconf
 python-multipart
+pinecone-client
