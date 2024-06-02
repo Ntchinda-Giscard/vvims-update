@@ -185,11 +185,6 @@ async def upload_files(
         # Check if either front or back image is missing
         if not front or not back:
             raise HTTPException(status_code=400, detail="Both front and back images are required.")
-        
-        # front_img_path = write_to_upload(front, file_path = "front.jpg")
-        # back_img_path = write_to_upload(back)
-        # face_img_path = write_to_upload(face)
-
 
         # Save the front image to disk
         front_path = os.path.join("uploads", 'front.jpg')
@@ -219,31 +214,32 @@ async def upload_files(
 
         print(f"[*] ---- Entity front ----> {ent_front}")
         print(f"[*] ---- Entity back ----> {ent_back}")
-        serial_number = ''
-        for i in ent_back["entities"]:
-            if 'serial' in i:
-                serial_number = i['serial']
-        
-        
-        print(f"[*] --- Serial ---> {serial_number}")
-        embedding = DeepFace.represent(img_path=face_path, model_name='DeepFace')
-        embedding_vector = embedding[0]['embedding']
-        existing_user = lookup_user_metadata(index, embedding_vector, serial_number)
 
-        print(f"[*] --- Existing user ---> {existing_user}")
-        if (len(existing_user["matches"]) <= 0):
-            print(f"[*] --- No match found --->")
-            index.upsert(
-                vectors=[
-                        {
-                            "id": str(uuid.uuid4()),
-                            "values" : embedding_vector,
-                            "metadata" : {"name": serial_number}
-                        }
-                    ],
-                    namespace="ns1"
-                )
-        
+        if face:
+            serial_number = ''
+            for i in ent_back["entities"]:
+                if 'serial' in i:
+                    serial_number = i['serial']
+            
+            
+            print(f"[*] --- Serial ---> {serial_number}")
+            embedding = DeepFace.represent(img_path=face_path, model_name='DeepFace')
+            embedding_vector = embedding[0]['embedding']
+            existing_user = lookup_user_metadata(index, embedding_vector, serial_number)
+
+            print(f"[*] --- Existing user ---> {existing_user}")
+            if (len(existing_user["matches"]) <= 0):
+                print(f"[*] --- No match found --->")
+                index.upsert(
+                    vectors=[
+                            {
+                                "id": str(uuid.uuid4()),
+                                "values" : embedding_vector,
+                                "metadata" : {"name": serial_number}
+                            }
+                        ],
+                        namespace="ns1"
+                    )
         # elif(len(existing_user["matches"]) > 0):
         #     if (existing_user["matches"][0]["score"])
 
