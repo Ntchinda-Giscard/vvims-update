@@ -199,7 +199,7 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
         # Save the face image to disk
         face_path = os.path.join("uploads", 'face.jpg')
         with open(face_path, "wb") as face_file:
-            face_file.write(await back.read())
+            face_file.write(await face.read())
 
 
         face_url = upload_to_s3(face_path)
