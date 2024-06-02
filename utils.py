@@ -56,7 +56,7 @@ def upload_to_s3(
     file_name = file_path.split("/")[-1]
     
     # Concatenate the timestamp with the file name
-    unique_file_name = f"{str(uuid.uuid4())}{file_name}"
+    unique_file_name = f"{str(uuid.uuid4())}-{file_name}"
 
     print(f"[*] ---- File path ====> {file_path}")
     
