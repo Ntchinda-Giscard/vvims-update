@@ -1,3 +1,4 @@
+import uuid
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 import os
@@ -226,6 +227,21 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
         existing_user = lookup_user_metadata(index, embedding_vector, serial_number)
 
         print(f"[*] --- Existing user ---> {existing_user}")
+        if (len(existing_user["matches"]) <= 0):
+            print(f"[*] --- No match found --->")
+            index.upsert(
+                vectors=[
+                        {
+                            "id": str(uuid.uuid4()),
+                            "values" : embedding_vector,
+                            "metadata" : {"name": serial_number}
+                        }
+                    ],
+                    namespace="ns1"
+                )
+        
+        # elif(len(existing_user["matches"]) > 0):
+        #     if (existing_user["matches"][0]["score"])
 
 
 
