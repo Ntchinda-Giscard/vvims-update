@@ -200,7 +200,7 @@ def licence_dect(img: str) -> list:
 def lookup_user_metadata(index, encoder, serial):
     result = index.query(
         namespace="ns1",
-        vector=[0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3],
+        vector= encoder,
         top_k=2,
         include_values=True,
         include_metadata=True,

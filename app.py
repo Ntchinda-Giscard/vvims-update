@@ -2,8 +2,10 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 import os
 from fastapi.middleware.cors import CORSMiddleware
-from utils import detect_licensePlate, licence_dect, ner_recog, read_text_img, upload_to_s3, vehicle_dect, write_to_upload
+from utils import detect_licensePlate, licence_dect, lookup_user, lookup_user_metadata, ner_recog, read_text_img, upload_to_s3, vehicle_dect, write_to_upload
 from pinecone import Pinecone
+from deepface import DeepFace
+
 
 pc = Pinecone(api_key="dc53a991-1d1a-4f03-b718-1ec0df3b0f00")
 index = pc.Index("faces-id")
@@ -217,7 +219,13 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
             if 'serial' in i:
                 serial_number = i['serial']
         
+        
         print(f"[*] --- Serial ---> {serial_number}")
+        embedding = DeepFace.represent(img_path=face_path, model_name='DeepFace')
+        embedding_vector = embedding[0]['embedding']
+        existing_user = lookup_user_metadata(index, embedding_vector, serial_number)
+
+        print(f"[*] --- Existing user ---> {existing_user}")
 
 
 
