@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 # Create the directory where PaddleOCR wants to write
 # RUN mkdir /.paddleocr /app/uploads /app/license && chmod -R 777 /.paddleocr /app/uploads /app/license
 # Create the necessary directories and set permissions
-RUN mkdir -p /.paddleocr /app/uploads /app/license && chmod -R 777 /.paddleocr /app/uploads /app/license
+RUN mkdir -p /.paddleocr /app/uploads /app/license //.deepface && chmod -R 777 //.deepface /.paddleocr /app/uploads /app/license
 
 # Create a non-root user and group
 RUN groupadd -r appgroup && useradd -r -g appgroup -d /app -s /sbin/nologin appuser

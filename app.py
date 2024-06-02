@@ -212,7 +212,12 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
 
         print(f"[*] ---- Entity front ----> {ent_front}")
         print(f"[*] ---- Entity back ----> {ent_back}")
+
+        for i in ent_back["entities"]:
+            if 'serial' in i:
+                serial_number = i['serial']
         
+        print(f"[*] --- Serial ---> {serial_number}")
 
 
 

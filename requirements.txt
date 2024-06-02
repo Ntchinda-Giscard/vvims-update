@@ -9,3 +9,6 @@ colorthief
 omegaconf
 python-multipart
 pinecone-client
+deepface
+tf-keras
+tensorflow==2.12
