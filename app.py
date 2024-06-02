@@ -243,8 +243,12 @@ async def upload_files(
                         ],
                         namespace="ns1"
                     )
-        # elif(len(existing_user["matches"]) > 0):
-        #     if (existing_user["matches"][0]["score"])
+            elif(len(existing_user["matches"]) > 0):
+                if (existing_user["matches"][0]["score"] >= 0.79):
+                    pass
+                    # return JSONResponse(content={"message": "This user and id card already exist"}, status_code=200)
+                elif(existing_user["matches"][0]["score"]):
+                    return HTTPException(content={"message" : "This card belongs to someone else"}, status_code=404)
 
 
 
