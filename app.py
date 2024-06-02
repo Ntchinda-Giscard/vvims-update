@@ -203,6 +203,9 @@ async def upload_files(front: UploadFile = File(...), back: UploadFile = File(..
         
         ent_front = ner_recog(front_text)
         ent_back = ner_recog(back_text)
+
+        print(f"[*] ---- Entity front ----> {ent_front}")
+        print(f"[*] ---- Entity back ----> {ent_back}")
         
 
 
