@@ -1,3 +1,4 @@
+from typing import Optional
 import uuid
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -169,7 +170,7 @@ async def read_items():
 async def upload_files(
     front: UploadFile = File(...), 
     back: UploadFile = File(...), 
-    face: UploadFile= File(...)
+    face: Optional[UploadFile]= File(...)
     ):
     """
     Endpoint to receive front and back image uploads and save them to disk.
@@ -196,13 +197,10 @@ async def upload_files(
         with open(back_path, "wb") as back_file:
             back_file.write(await back.read())
         
-        # Save the face image to disk
-        face_path = os.path.join("uploads", 'face.jpg')
-        with open(face_path, "wb") as face_file:
-            face_file.write(await face.read())
+       
 
 
-        face_url = upload_to_s3(face_path)
+        
         front_url = upload_to_s3(front_path)
         back_url = upload_to_s3(back_path)
 
@@ -215,7 +213,12 @@ async def upload_files(
         print(f"[*] ---- Entity front ----> {ent_front}")
         print(f"[*] ---- Entity back ----> {ent_back}")
 
-        if face:
+        if face is not None:
+             # Save the face image to disk
+            face_path = os.path.join("uploads", 'face.jpg')
+            with open(face_path, "wb") as face_file:
+                face_file.write(await face.read())
+            face_url = upload_to_s3(face_path)
             serial_number = ''
             for i in ent_back["entities"]:
                 if 'serial' in i:
