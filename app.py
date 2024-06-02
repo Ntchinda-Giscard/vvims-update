@@ -170,7 +170,7 @@ async def read_items():
 async def upload_files(
     front: UploadFile = File(...), 
     back: UploadFile = File(...), 
-    face: Optional[UploadFile]= File(...)
+    face: Optional[UploadFile]= None
     ):
     """
     Endpoint to receive front and back image uploads and save them to disk.
